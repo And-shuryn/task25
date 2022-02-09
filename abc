@@ -1,0 +1,151 @@
+import sys
+
+
+class Object:
+    total_eat = 0
+
+    def __init__(self, name, satity=30, happy=100):
+        self.name = name
+        self.satity = satity
+        self.happy = happy
+
+    def __str__(self):
+        return print('У {} степень голода {}, уровень счастья {}'.format(self.name, self.satity, self.happy))
+
+    def eat(self):
+        self.satity += 30
+        Home.food -= 30
+        self.total_eat += 30
+        print(self.name, 'кушает')
+
+    def pet_cat(self):
+        self.happy += 5
+
+
+class Husband(Object):
+    money = 0
+
+    def play(self):
+        self.satity -= 10
+        self.happy += 20
+        print(self.name, 'играет в приставку')
+
+    def go_to_work(self):
+        self.satity -= 10
+        Home.money += 150
+        self.money += 150
+        print(self.name, 'сходил на работу')
+
+    def life(self):
+        self.happy -= 10
+        self.go_to_work()
+        if self.satity <= 0:
+            sys.exit(f'{self.name} Умер от голода')
+        if self.happy < 10:
+            sys.exit(f'{self.name} Умер от дипрессии')
+        elif self.satity < 30:
+            self.eat()
+        elif Home.money < 80:
+            self.go_to_work()
+        elif self.happy < 50:
+            self.play()
+
+
+class Wife(Object):
+    fur = 0
+
+    def buy_eat(self):
+        self.satity -= 10
+        Home.food += 50
+        Home.money -= 50
+        print(self.name, 'сходила в магазин за продуктами')
+
+    def buy_eat_cat(self):
+        self.satity -= 10
+        Home.cat_food += 10
+        Home.money -= 10
+        print(self.name, 'купила еду для кота')
+
+    def buy_fur(self):
+        self.satity -= 10
+        Home.money -= 350
+        self.happy += 60
+        self.fur += 1
+        print(self.name, 'купила шубу')
+
+    def cleaning(self):
+        self.satity -= 10
+        print(self.name, 'сделала уборку дома')
+        if Home.dirt > 100:
+            Home.dirt -= 100
+        else:
+            Home.dirt = 0
+
+    def life(self):
+        self.happy -= 10
+        Home.dirt += 5
+        if self.satity <= 0:
+            sys.exit(f'{self.name} Умерла от голода')
+        if self.happy < 10:
+            sys.exit(f'{self.name} Умерла от дипрессии')
+        if self.satity < 30:
+            self.eat()
+        if Home.dirt > 50:
+            self.cleaning()
+        if Home.food < 50:
+            self.buy_eat()
+        if Home.cat_food < 30:
+            self.buy_eat_cat()
+        if self.happy < 50 and Home.money > 400:
+            self.buy_fur()
+
+
+class Cat(Object):
+    def __str__(self):
+        return print('У {} степень голода {}'.format(self.name, self.satity))
+
+    def eat(self):
+        self.satity += 20
+        Home.cat_food -= 10
+        print(self.name, 'поел')
+
+    def slip(self):
+        return print('Кот спит.')
+
+    def spoil(self):
+        Home.dirt += 5
+        print(self.name, 'кот поцарапал обои')
+
+    def life(self):
+        self.satity -= 5
+        if self.satity <= 0:
+            sys.exit(f'{self.name} Умер от голода')
+        if self.satity < 20:
+            self.eat()
+
+
+class Home:
+    money = 100
+    food = 50
+    cat_food = 30
+    dirt = 0
+
+    def __str__(self):
+        return f'Осталось: {self.money} денег, {self.food} еды, {self.cat_food} корма'
+
+vasia = Husband('Вася')
+masha = Wife('Маша')
+cat = Cat('Кот')
+home = Home()
+
+for day in range(1, 366):
+    print('\nДень {}'.format(day))
+    vasia.life()
+    masha.life()
+    cat.life()
+    print(vasia.__str__())
+    print(masha.__str__())
+    print(cat.__str__())
+    print(home.__str__())
+
+# print(Home.food)
